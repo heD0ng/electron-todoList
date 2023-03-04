@@ -6,16 +6,12 @@
 ## 运行步骤
 
 ```
-npm install
-npm run dev
-npm run build
+yarn
+yarn dev
+yarn build
 ```
-## 更新日志
-
-- [x] 待办的基本功能
-- [x] 数据本地存储
-- [x] 窗口贴边自动隐藏
-- [x] 开机自启
+## update
+### 2023-03-04
+- [x] 基本功能
+- [x] 贴边隐藏
 - [x] 锁定窗口
-- [x] 自定义设置
-- [ ] .......
