@@ -19,6 +19,7 @@ export const createWindow = (option: CreateWindowOption): BrowserWindow => {
         maximizable: false,
         transparent: true,
         frame: false,
+        show: true,
         useContentSize: true,
         alwaysOnTop: setting.base.alwaystop,
         webPreferences: {

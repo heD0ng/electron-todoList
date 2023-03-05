@@ -7,6 +7,9 @@ import { getImagePath } from './manager/file';
 import { StatusModel } from '@/common/interface';
 import { addTodo } from './manager/todo';
 import './event';
+import { addCrashReport } from './utils/crash';
+
+const gotTheLock = app.requestSingleInstanceLock();
 // 主窗口
 let mainWindow: BrowserWindow;
 // 系统托盘
@@ -37,7 +40,7 @@ const initMain = () => {
 
 }
 
-// 创建托盘
+// 托盘
 const initTray = () => {
     tray = new Tray(nativeImage.createFromPath(getImagePath('static/image/menu/logo.png')))
     let menu = [{
@@ -47,7 +50,6 @@ const initTray = () => {
     }]
     tray.setContextMenu(Menu.buildFromTemplate(menu));
 
-    // 双击显示主界面
     tray.addListener('double-click', () => {
         mainWindow.show();
     })
@@ -56,26 +58,53 @@ const initTray = () => {
 // 初始化数据
 const firstRunInit = () => {
     addTodo({
-        content: '点击“新增待办”增加一条新的待办',
-        status: StatusModel.noFinish
-    })
-    addTodo({
-        content: '双击“待办”修改当前待办',
+        content: '点击“新增待办”增加一条TODO',
         status: StatusModel.noFinish
     })
 }
 
-app.whenReady().then(() => {
-    // 判断首次运行
-    if (checkIsFirstRun()) {
-        firstRunInit();
-    }
-    // 创建主窗口
-    initMain();
-    // 区分开发与生产环境
-    if (!app.isPackaged) {
-        mainWindow.webContents.openDevTools({ mode: "detach" });
-    }
-    // 创建托盘
-    initTray();
-})
+if (!gotTheLock) {
+    app.quit();
+} else {
+    addCrashReport();
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        // 打开之前的
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) {
+                mainWindow.restore()
+            }
+            mainWindow.focus()
+        }
+    })
+
+    app.whenReady().then(() => {
+        // 判断首次运行
+        if (checkIsFirstRun()) {
+            firstRunInit();
+        }
+        // 创建主窗口
+        initMain();
+        // 区分开发与生产环境
+        if (!app.isPackaged) {
+            mainWindow.webContents.openDevTools({ mode: "detach" });
+        }
+        // 创建托盘
+        initTray();
+    })
+}
+// 多窗口
+// app.whenReady().then(() => {
+//     addCrashReport();
+//     // 判断首次运行
+//     if (checkIsFirstRun()) {
+//         firstRunInit();
+//     }
+//     // 创建主窗口
+//     initMain();
+//     // 区分开发与生产环境
+//     if (!app.isPackaged) {
+//         mainWindow.webContents.openDevTools({ mode: "detach" });
+//     }
+//     // 创建托盘
+//     initTray();
+// })
