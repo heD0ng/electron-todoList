@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, nativeImage, Tray } from 'electron';
+import { app, BrowserWindow,HandlerDetails, Menu, nativeImage, shell, Tray } from 'electron';
 import { baseUrl } from './config';
 import '@/common/load';
 import { bridgeKey } from '@/common/bridge';
@@ -8,6 +8,7 @@ import { StatusModel } from '@/common/interface';
 import { addTodo } from './manager/todo';
 import './event';
 import { addCrashReport } from './utils/crash';
+import {checkUpdate} from './utils/update';
 
 const gotTheLock = app.requestSingleInstanceLock();
 // 主窗口
@@ -38,6 +39,11 @@ const initMain = () => {
         mainWindow.webContents.send(bridgeKey.leaveToZero);
     })
 
+    // 用默认浏览器打开URL;
+    mainWindow.webContents.setWindowOpenHandler((details: HandlerDetails) => {
+        shell.openExternal(details.url);
+        return {action: 'deny'}
+    })
 }
 
 // 托盘
@@ -67,6 +73,7 @@ if (!gotTheLock) {
     app.quit();
 } else {
     addCrashReport();
+    checkUpdate();
     app.on('second-instance', (event, commandLine, workingDirectory) => {
         // 打开之前的
         if (mainWindow) {
