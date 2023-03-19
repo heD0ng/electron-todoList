@@ -9,7 +9,7 @@ export function checkUpdate() {
     autoUpdater.autoDownload = false;
 
     autoUpdater.on('error', (err) => {
-        console.log(err);
+        console.error(err);
     })
     
     // 检查新版本

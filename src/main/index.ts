@@ -1,4 +1,4 @@
-import { app, BrowserWindow,HandlerDetails, Menu, nativeImage, shell, Tray } from 'electron';
+import { app, BrowserWindow,globalShortcut,HandlerDetails, Menu, nativeImage, shell, Tray } from 'electron';
 import { baseUrl } from './config';
 import '@/common/load';
 import { bridgeKey } from '@/common/bridge';
@@ -9,6 +9,7 @@ import { addTodo } from './manager/todo';
 import './event';
 import { addCrashReport } from './utils/crash';
 import {checkUpdate} from './utils/update';
+import { checkNetworkStatus } from './utils/net';
 
 const gotTheLock = app.requestSingleInstanceLock();
 // 主窗口
@@ -44,6 +45,11 @@ const initMain = () => {
         shell.openExternal(details.url);
         return {action: 'deny'}
     })
+    // 用于测试环境调试
+    globalShortcut.register('CommandOrControl+Shift+L', () => {
+        let focusWin = BrowserWindow.getFocusedWindow();
+        focusWin && focusWin.webContents.openDevTools();
+    })
 }
 
 // 托盘
@@ -72,6 +78,7 @@ const firstRunInit = () => {
 if (!gotTheLock) {
     app.quit();
 } else {
+    checkNetworkStatus();
     addCrashReport();
     checkUpdate();
     app.on('second-instance', (event, commandLine, workingDirectory) => {
