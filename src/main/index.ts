@@ -10,7 +10,8 @@ import './event';
 import { addCrashReport } from './utils/crash';
 import {checkUpdate} from './utils/update';
 import { checkNetworkStatus } from './utils/net';
-
+// import  CleanPlugin  from './utils/clean';
+// new CleanPlugin({});
 const gotTheLock = app.requestSingleInstanceLock();
 // 主窗口
 let mainWindow: BrowserWindow;
@@ -26,6 +27,7 @@ const initMain = () => {
         skipTaskbar: true,
     })
 
+    checkNetworkStatus(mainWindow);
     // 监听窗口移动事件
     mainWindow.addListener('moved', (e: Electron.Event) => {
         const pos = mainWindow.getPosition();
@@ -78,7 +80,6 @@ const firstRunInit = () => {
 if (!gotTheLock) {
     app.quit();
 } else {
-    checkNetworkStatus();
     addCrashReport();
     checkUpdate();
     app.on('second-instance', (event, commandLine, workingDirectory) => {
