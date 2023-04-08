@@ -24,12 +24,12 @@ const initMain = () => {
         url: baseUrl,
         dev: true,
         show: true,
-        skipTaskbar: true,
+        skipTaskbar: false,
     })
 
     checkNetworkStatus(mainWindow);
     // 监听窗口移动事件
-    mainWindow.addListener('moved', (e: Electron.Event) => {
+    mainWindow.on('moved', (e: Electron.Event) => {
         const pos = mainWindow.getPosition();
         if (pos[1] <= 2) {
             mainWindow.setPosition(pos[0], 0);
@@ -38,7 +38,8 @@ const initMain = () => {
             mainWindow.webContents.send(bridgeKey.leaveToZero);
         }
     })
-    mainWindow.addListener('will-move', () => {
+    // addListener
+    mainWindow.on('will-move', () => {
         mainWindow.webContents.send(bridgeKey.leaveToZero);
     })
 
