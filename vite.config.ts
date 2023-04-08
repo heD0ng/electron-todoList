@@ -49,12 +49,12 @@ export default defineConfig({
         entry: path.join(process.cwd(), "src/main/index.ts"),
         // 输出的文件路径 使用 vite中的配置 build.outDir
         // 输出的文件名
-        outPut: "entry.js",
+        outPut: "index.js",
         // electron-builder  参考 https://juejin.cn/post/7140962767275556901 配置
         builderOptions: {
             config: {
                 directories: {
-                    output: "./release/release",
+                    output: "./release/electron",
                     app: vueOutDir,
                 },
                 files: ["**"],
@@ -62,9 +62,9 @@ export default defineConfig({
                 // 打包后的软件名
                 productName: "记事本",
                 appId: "com.hd.todo.list.app",
-                // 加密
+                // 加密:混淆代码
                 asar: true,
-                extraResources: "./resource/release",
+                extraResources: "./resource/electron",
                 // win要求256*256的icon/png，建议使用png
                 win: {
                     // target: ["zip", "nsis"],

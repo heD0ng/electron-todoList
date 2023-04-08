@@ -7,10 +7,12 @@
     "scripts": {
         "serve": "vite",
         "build": "vue-tsc --noEmit && vite build",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "electron:build": "electron-builder"
     },
     "dependencies": {
         "@electron/remote": "^2.0.1",
+        "bytenode": "^1.4.0",
         "electron-store": "^8.0.1",
         "electron-updater": "^5.3.0",
         "koa": "^2.14.1",

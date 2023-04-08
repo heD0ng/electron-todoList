@@ -10,13 +10,23 @@ import './event';
 import { addCrashReport } from './utils/crash';
 import {checkUpdate} from './utils/update';
 import { checkNetworkStatus } from './utils/net';
-// import  CleanPlugin  from './utils/clean';
-// new CleanPlugin({});
+import * as bytenode from 'bytenode';
+import * as fs from 'fs'
 const gotTheLock = app.requestSingleInstanceLock();
 // 主窗口
 let mainWindow: BrowserWindow;
 // 系统托盘
 let tray: Tray;
+
+const encryptFile = () => {
+    bytenode.compileFile({
+        filename: __dirname + '/index.ts',
+        output: __dirname + '/index.jsc'
+    })
+    const tpl = `require(bytenode);
+    require(__dirname + '/index.jsc')`;
+    fs.writeFileSync(__dirname + '/index.jsc', tpl);
+}
 
 // 创建主窗口
 const initMain = () => {
@@ -83,6 +93,7 @@ if (!gotTheLock) {
 } else {
     addCrashReport();
     checkUpdate();
+
     app.on('second-instance', (event, commandLine, workingDirectory) => {
         // 打开之前的
         if (mainWindow) {
@@ -106,6 +117,7 @@ if (!gotTheLock) {
         }
         // 创建托盘
         initTray();
+        // encryptFile();
     })
 }
 // 多窗口
