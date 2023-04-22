@@ -100,8 +100,9 @@ if (!gotTheLock) {
         }
         // 创建主窗口
         initMain();
-        // 区分开发与生产环境
-        if (!app.isPackaged) {
+        // 区分开发与生产环境:!app.isPackaged ||
+        console.log('process.env', process.env.NODE_ENV);
+        if (process.env.NODE_ENV == 'dev') {
             mainWindow.webContents.openDevTools({ mode: "detach" });
         }
         // 创建托盘

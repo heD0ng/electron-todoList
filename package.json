@@ -5,12 +5,13 @@
     "author": "hd",
     "description": "跨平台的todo应用",
     "scripts": {
-        "serve": "vite",
-        "build": "vue-tsc --noEmit && vite build",
+        "serve": "cross-env NODE_ENV=dev vite",
+        "build": "cross-env NODE_ENV=prod vue-tsc --noEmit && vite build",
         "preview": "vite preview"
     },
     "dependencies": {
         "@electron/remote": "^2.0.1",
+        "cross-env": "^7.0.3",
         "electron-store": "^8.0.1",
         "electron-updater": "^5.3.0",
         "koa": "^2.14.1",
