@@ -10,8 +10,8 @@ import './event';
 import { addCrashReport } from './utils/crash';
 import {checkUpdate} from './utils/update';
 import { checkNetworkStatus } from './utils/net';
-// import  CleanPlugin  from './utils/clean';
-// new CleanPlugin({});
+import { registerProtocol } from './utils/protocol';
+
 const gotTheLock = app.requestSingleInstanceLock();
 // 主窗口
 let mainWindow: BrowserWindow;
@@ -84,16 +84,19 @@ if (!gotTheLock) {
     addCrashReport();
     checkUpdate();
     app.on('second-instance', (event, commandLine, workingDirectory) => {
-        // 打开之前的
-        if (mainWindow) {
-            if (mainWindow.isMinimized()) {
-                mainWindow.restore()
+        // 页面唤起
+        if (process.platform === 'win32') {
+            if (mainWindow) {
+                if (mainWindow.isMinimized()) {
+                    mainWindow.restore()
+                }
+                mainWindow.focus()
             }
-            mainWindow.focus()
         }
     })
 
     app.whenReady().then(() => {
+        registerProtocol();
         // 判断首次运行
         if (checkIsFirstRun()) {
             firstRunInit();
@@ -101,8 +104,7 @@ if (!gotTheLock) {
         // 创建主窗口
         initMain();
         // 区分开发与生产环境:!app.isPackaged ||
-        console.log('process.env', process.env.NODE_ENV);
-        if (process.env.NODE_ENV == 'dev') {
+        if (!app.isPackaged) {
             mainWindow.webContents.openDevTools({ mode: "detach" });
         }
         // 创建托盘

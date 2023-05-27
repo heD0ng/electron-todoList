@@ -111,7 +111,8 @@ export default defineConfig({
                     createDesktopShortcut: true,
                     // 创建开始菜单图标
                     // createStartMenuShortcut: true
-              }
+                    include: 'installer.nsh'
+                }
             },
             projectDir: process.cwd(),
         },

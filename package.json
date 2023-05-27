@@ -5,8 +5,8 @@
     "author": "hd",
     "description": "跨平台的todo应用",
     "scripts": {
-        "serve": "cross-env NODE_ENV=dev vite",
-        "build": "cross-env NODE_ENV=prod vue-tsc --noEmit && vite build",
+        "serve": "vite",
+        "build": "vue-tsc --noEmit && vite build",
         "preview": "vite preview"
     },
     "dependencies": {
