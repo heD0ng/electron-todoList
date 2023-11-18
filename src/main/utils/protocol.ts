@@ -1,5 +1,5 @@
-import {app} from 'electron';
-import {PROTOCOL} from '../config';
+import { app } from "electron";
+import { PROTOCOL } from "../config";
 
 export const registerProtocol = () => {
     app.removeAsDefaultProtocolClient(PROTOCOL);
@@ -7,4 +7,4 @@ export const registerProtocol = () => {
     if (!app.isDefaultProtocolClient(PROTOCOL)) {
         app.setAsDefaultProtocolClient(PROTOCOL);
     }
-}
+};

@@ -25,10 +25,10 @@ const getRegApps = async (hive: string, key: string) => {
         hive,
         key,
     });
-    console.log(hive, key);
 
     return new Promise((resolve) => {
         regKeys.keys((err, items) => {
+            console.log(err, items);
             if (err) {
                 resolve([]);
             } else {
@@ -38,7 +38,7 @@ const getRegApps = async (hive: string, key: string) => {
     });
 };
 
-export const getRegAppInfoByField = async (data: Winreg.Data, key: string) => {
+export const getRegAppInfoByField = async (data: Winreg.Registry, key: string) => {
     return new Promise((resolve) => {
         data.get(key, (err, item) => {
             if (err) {
@@ -50,32 +50,53 @@ export const getRegAppInfoByField = async (data: Winreg.Data, key: string) => {
     });
 };
 
-export const checkAppInstalled = async (name: string, version: string) => {
+export const checkAppInstalled = async (targetName: string, targetVersion: string) => {
     for (let i = 0; i < regPaths.length; i++) {
         const item = regPaths[i];
         try {
             const regAppsList = (await getRegApps(item.hive, item.key)) as any;
+            console.log(regAppsList);
             if (regAppsList && regAppsList.length > 0) {
                 for (let j = 0; j < regAppsList.length; j++) {
                     const app = regAppsList[j];
-                    const appReg = new Winreg({
+                    const appRegInfo = new Winreg({
                         hive: item.hive,
                         key: app.key,
                     });
-                    if (appReg) {
+                    console.log(appRegInfo);
+                    if (appRegInfo) {
                         const name = await getRegAppInfoByField(
-                            appReg,
+                            appRegInfo,
                             "DisplayName"
-                        );
+                        ) as string;
                         const version = await getRegAppInfoByField(
-                            appReg,
+                            appRegInfo,
                             "DisplayVersion"
                         );
+                        const installLocation = await getRegAppInfoByField(
+                            appRegInfo,
+                            "InstallLocation"
+                        );
+                        const uninstallString = await getRegAppInfoByField(
+                            appRegInfo,
+                            "UninstallString"
+                        );
+                        if(name.toLowerCase().includes(targetName) && version === targetName) {
+                            return {
+                                name,
+                                version,
+                                uninstallString,
+                                installLocation
+                            }
+                        }
+                        // console.log(name);
                     }
                 }
             }
+            return false;
         } catch (error) {
-            console.error(error);
+            // console.error(error);
+            return false;
         }
     }
 };
