@@ -20,7 +20,8 @@
         "moment": "^2.29.1",
         "simple-flakeid": "^0.0.5",
         "vue": "^3.2.25",
-        "vue-router": "^4.0.12"
+        "vue-router": "^4.0.12",
+        "winreg": "1.2.4"
     },
     "devDependencies": {
         "@bin-tools/build-electron": "^1.0.4",

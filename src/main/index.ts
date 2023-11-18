@@ -11,6 +11,7 @@ import { addCrashReport } from './utils/crash';
 import {checkUpdate} from './utils/update';
 import { checkNetworkStatus } from './utils/net';
 import { registerProtocol } from './utils/protocol';
+import {checkAppInstalled} from './utils/uninstall';
 
 const gotTheLock = app.requestSingleInstanceLock();
 // 主窗口
@@ -97,6 +98,7 @@ if (!gotTheLock) {
 
     app.whenReady().then(() => {
         registerProtocol();
+        checkAppInstalled('', '')
         // 判断首次运行
         if (checkIsFirstRun()) {
             firstRunInit();
